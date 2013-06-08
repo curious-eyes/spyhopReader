@@ -13,11 +13,12 @@ def custom_dispatcher(router, request, response):
     handler = route.handler
     if isinstance(handler, basestring):
         handler, args, kwargs = parse_handler_template(request, handler, args, kwargs)
-#        logging.info('handler is %s' % handler)
-#        logging.info(request.route_args)
-#        logging.info(request.route_kwargs)
-#        for x in request.params:
-#            logging.info('Param is %s' % x)
+        # debug logging
+        # logging.info('handler is %s' % handler)
+        # logging.info(request.route_args)
+        # logging.info(request.route_kwargs)
+        # for x in request.params:
+        #     logging.info('Param is %s' % x)
         router.handlers[handler] = handler = webapp2.import_string(handler)
         """
         if handler not in self.handlers:
@@ -36,6 +37,8 @@ def parse_handler_template(request, handler, args, kwargs):
 
     dict_path = {}
     for index, value in enumerate(args):
+        if (len(value) == 0):
+            continue
         dict_path[index] = value
 
     module = dict_path.get(0, spy_setting.DEFAULT_MODULE)
@@ -44,8 +47,8 @@ def parse_handler_template(request, handler, args, kwargs):
     action = (action[0]).upper() + action[1:]
 
     kwargs = {'module': module, 'controller': controller, 'action': action}
-#    logging.info(kwargs)
-#    logging.info(args)
+    # logging.info(kwargs)
+    # logging.info(args)
     counter = 3
     while True:
         key = dict_path.get(counter, None)

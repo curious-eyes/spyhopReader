@@ -15,11 +15,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from os import environ
+import logging
 import webapp2
 from spyframework import router
 
 
+def handle_404(request, response, exception):
+    logging.exception(exception)
+    response.write('Oops! I could swear this page was here!')
+    response.set_status(exception.code)
+
+
+def handle_500(request, response, exception):
+    logging.exception(exception)
+    response.write('A server error occurred!')
+    response.set_status(500)
+
+debug = environ.get('SERVER_SOFTWARE', '').startswith('Dev')
+
 app = webapp2.WSGIApplication([
     ('/.*', 'modules.{module}.controllers.{controller}.{action}Handler'),
-], debug=True)
+    # webapp2.Route(r'/<path1>/<path2>/<path3>(/.*)', handler='modules.{module}.controllers.{controller}.{action}Handler'),
+], debug=debug)
 app.router.set_dispatcher(router.custom_dispatcher)
+
+app.error_handlers[404] = handle_404
+app.error_handlers[500] = handle_500
