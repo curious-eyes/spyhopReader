@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import webapp2
-import logging
 import jinja2
-import datetime
 from spy_setting import *
 from models.feed import Feed
-from google.appengine.api import urlfetch
-from xml.dom import minidom
+from models.parsefeed import parsefeed
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(MODULES_DIR + '/toppage/views/templates'),
@@ -29,38 +26,12 @@ class DefaultHandler(webapp2.RequestHandler):
 
     def post(self):
         feedurl = self.request.get("url")
+        feedparam = parsefeed(feedurl)
         self.response.write(feedurl)
-        feedtitle = ''
-        key_string = ''
-        feedinput = urlfetch.fetch(feedurl)
-        if feedinput.status_code == 200:
-            # self.response.write(feedinput.content)
-            rss_parsed = minidom.parseString(feedinput.content)
-            xmltitle = rss_parsed.getElementsByTagName("title")[0]
-            feedtitle = getText(xmltitle.childNodes)
-            xmllink = rss_parsed.getElementsByTagName("link")[0]
-            if (xmllink.getAttribute('href')):
-                # atom 1.0
-                key_string = xmllink.getAttribute('href')
-                str_updated = getText(rss_parsed.getElementsByTagName("updated")[0].childNodes)
-                feed_updated = datetime.datetime.strptime(str_updated, '%Y-%m-%dT%H:%M:%SZ')
-            else:
-                # rss 2.0
-                key_string = getText(xmllink.childNodes)
-                str_updated = getText(rss_parsed.getElementsByTagName("lastBuildDate")[0].childNodes)
-                feed_updated = datetime.datetime.strptime(str_updated, '%a, %d %b %Y %H:%M:%S +0000')
-        logging.info(feed_updated)
 
-        feed = Feed(key_name=key_string, title=feedtitle, url=feedurl)
-        # feed.upday = datetime.datetime.now().date()
-        feed.upday = feed_updated
+        feed = Feed(key_name=feedparam['key_name'],
+                    title=feedparam['title'],
+                    url=feedparam['url'],
+                    upday=feedparam['upday'])
         feed.put()
         return webapp2.redirect('/')
-
-
-def getText(nodelist):
-    rc = ""
-    for node in nodelist:
-        if node.nodeType == node.TEXT_NODE:
-            rc = rc + node.data
-    return rc

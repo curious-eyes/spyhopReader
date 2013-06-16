@@ -5,5 +5,5 @@ from google.appengine.ext import db
 
 class Feed(db.Model):
     title = db.StringProperty()
-    url = db.StringProperty()
+    url = db.LinkProperty()
     upday = db.DateTimeProperty()
