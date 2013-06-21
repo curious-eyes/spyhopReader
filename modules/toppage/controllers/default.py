@@ -1,30 +1,24 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# import logging
 import webapp2
-import jinja2
-from spy_setting import *
+from spyframework.router import RouterBaseHandler
 from models.feed import Feed
 from models.parsefeed import parsefeed
 
-JINJA_ENVIRONMENT = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(MODULES_DIR + '/toppage/views/templates'),
-    extensions=['jinja2.ext.autoescape'])
 
-
-class DefaultHandler(webapp2.RequestHandler):
+class DefaultHandler(RouterBaseHandler):
     def get(self, *args, **kwargs):
         # RSSフィード一覧取得
+        # logging.info(super(DefaultHandler, self).get_module_name())
         feeds = Feed.all()
         template_values = {
             'feeds': feeds,
         }
-        template = JINJA_ENVIRONMENT.get_template('default.html')
+        template = self.JINJA_ENVIRONMENT.get_template('default.html')
         self.response.write(template.render(template_values))
-        """
-        feedurl = 'http://www.curious-eyes.com/blog/shuhei/?feed=atom'
-        """
 
-    def post(self):
+    def post(self, *args, **kwargs):
         feedurl = self.request.get("url")
         feedparam = parsefeed(feedurl)
         self.response.write(feedurl)

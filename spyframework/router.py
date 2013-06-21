@@ -2,8 +2,23 @@
 # -*- coding: utf-8 -*-
 # import logging
 import webapp2
+import jinja2
 import spy_setting
 import re
+
+
+class RouterBaseHandler(webapp2.RequestHandler):
+    # Module, Controller, Action
+    adapted_handler_spec = {}
+
+    def get_module_name(self):
+        return self.adapted_handler_spec['module']
+
+    def get_controller_name(self):
+        return self.adapted_handler_spec['controller']
+
+    def get_action_name(self):
+        return self.adapted_handler_spec['action']
 
 
 def custom_dispatcher(router, request, response):
@@ -19,13 +34,20 @@ def custom_dispatcher(router, request, response):
         # logging.info(request.route_kwargs)
         # for x in request.params:
         #     logging.info('Param is %s' % x)
-        router.handlers[handler] = handler = webapp2.import_string(handler)
-        """
-        if handler not in self.handlers:
-            router.handlers[handler] = handler = webapp2.import_string(handler)
-        else:
-            handler = router.handlers[handler]
-        """
+        # logging.info(args)
+        # logging.info(kwargs)
+        try:
+            handler = webapp2.import_string(handler)
+            # Module, Controller, Action 文字列格納
+            handler.adapted_handler_spec = kwargs
+            # jinjaテンプレート定義
+            handler.JINJA_ENVIRONMENT = jinja2.Environment(
+                loader=jinja2.FileSystemLoader(spy_setting.MODULES_DIR + '/' + kwargs['module'] + '/views/templates/' + kwargs['controller']),
+                extensions=['jinja2.ext.autoescape'])
+
+            router.handlers[handler] = handler
+        except webapp2.ImportStringError:
+            webapp2.abort(404)
 
     return router.adapt(handler)(request, response)
 
@@ -60,6 +82,6 @@ def parse_handler_template(request, handler, args, kwargs):
             break
 
     def sub(match):
-        return kwargs.pop(match.group().strip('{}'))
+        return kwargs.get(match.group().strip('{}'))
 
     return re.sub('{.*?}', sub, handler), args, kwargs
