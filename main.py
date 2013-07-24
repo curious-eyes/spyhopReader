@@ -21,6 +21,12 @@ import webapp2
 from spyframework import router
 
 
+def handle_401(request, response, exception):
+    logging.exception(exception)
+    response.write('Not authorized!')
+    response.set_status(exception.code)
+
+
 def handle_404(request, response, exception):
     logging.exception(exception)
     response.write('Oops! I could swear this page was here!')
@@ -40,5 +46,6 @@ app = webapp2.WSGIApplication([
 ], debug=debug)
 app.router.set_dispatcher(router.custom_dispatcher)
 
+app.error_handlers[401] = handle_401
 app.error_handlers[404] = handle_404
 app.error_handlers[500] = handle_500

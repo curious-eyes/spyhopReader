@@ -3,11 +3,11 @@
 from google.appengine.ext import ndb
 
 
-class Feed(ndb.Model):
+class NdbFeed(ndb.Model):
     title = ndb.TextProperty()
     url = ndb.StringProperty()
     upday = ndb.DateTimeProperty()
 
     @classmethod
     def gen_key(cls, key_string):
-        return ndb.Key(Feed, key_string)
+        return ndb.Key(NdbFeed, key_string)
