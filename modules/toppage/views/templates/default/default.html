@@ -1,13 +1,41 @@
 <!DOCTYPE html>
 {% autoescape true %}
 <html>
+  <head>
+    <link rel="stylesheet" href="/FlatUI/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/FlatUI/css/flat-ui.css">
+  </head>
   <body>
-    <p><a href="{{ urlLogout }}">ログアウト</a></p>
-
-    <form action="/" method="post">
-      <div>Feed-URL:<input type="text" name="url" size="100"></div>
-      <div><input type="submit" value="登 録"></div>
-    </form>
+    <div class="container">
+      <div class="row demo-row">
+        <div class="span12">
+          <div class="navbar navbar-inverse">
+            <div class="navbar-inner">
+              <div class="container">
+                <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target="#nav-collapse-01"></button>
+                    <a class="brand fui-flat"></a>
+                <div class="nav-collapse collapse" id="nav-collapse-01">
+                  <ul class="nav">
+                    <li>
+                      <a href="{{ urlLogout }}">
+                        Logout
+                      </a>
+                    </li>
+                  </ul>
+                  <form class="navbar-search form-search pull-right" action="/" method="post">
+                    <div class="input-append">
+                      <input type="text" class="search-query span2" name="url" placeholder="Feed-URL">
+                      <button type="submit" class="btn btn-large" value="登 録">
+                        <i class="fui-plus"></i>
+                      </button>
+                    </div>
+                  </form>
+                </div><!--/.nav -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
     <b>{{ msg }}</b>
     <ul>
@@ -15,6 +43,7 @@
         <li><b>{{ feed.title }}</b> ({{ feed.url }})</li>
     {% endfor %}
     </ul>
+  </div>
   </body>
 </html>
 {% endautoescape %}
