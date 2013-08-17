@@ -13,7 +13,8 @@ class DefaultHandler(RouterBaseHandler):
         # RSSフィード一覧取得
         urlLogout = users.create_logout_url('/')
         # logging.info(super(DefaultHandler, self).get_module_name())
-        feeds = NdbFeed.query()
+        feed_key = NdbFeed.get_ancestor()
+        feeds = NdbFeed.query_feed(feed_key)
         template_values = {
             'feeds': feeds,
             'urlLogout': urlLogout,

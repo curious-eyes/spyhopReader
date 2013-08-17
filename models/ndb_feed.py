@@ -10,4 +10,12 @@ class NdbFeed(ndb.Model):
 
     @classmethod
     def gen_key(cls, key_string):
-        return ndb.Key(NdbFeed, key_string)
+        return ndb.Key(NdbFeed, key_string, parent = ndb.Key('Feed', 'Blogs'))
+
+    @classmethod
+    def get_ancestor(cls):
+        return ndb.Key('Feed', 'Blogs')
+
+    @classmethod
+    def query_feed(cls, ancestor_key):
+        return cls.query(ancestor=ancestor_key)
