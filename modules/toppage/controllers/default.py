@@ -12,16 +12,20 @@ class DefaultHandler(RouterBaseHandler):
     def get(self, *args, **kwargs):
         # RSSフィード一覧取得
         urlLogout = users.create_logout_url('/')
+        urlStoreFeed = webapp2.uri_for('store-feed');
         # logging.info(super(DefaultHandler, self).get_module_name())
         feed_key = NdbFeed.get_ancestor()
         feeds = NdbFeed.query_feed(feed_key)
         template_values = {
             'feeds': feeds,
             'urlLogout': urlLogout,
+            'urlStoreFeed': urlStoreFeed,
         }
         template = self.JINJA_ENVIRONMENT.get_template('default.html')
         self.response.write(template.render(template_values))
 
+
+class StoreHandler(RouterBaseHandler):
     def post(self, *args, **kwargs):
         feedurl = self.request.get("url")
         feedparam = parsefeed(feedurl)

@@ -22,7 +22,7 @@
                       </a>
                     </li>
                   </ul>
-                  <form class="navbar-search form-search pull-right" action="/" method="post">
+                  <form class="navbar-search form-search pull-right" action="{{ urlStoreFeed }}" method="post">
                     <div class="input-append">
                       <input type="text" class="search-query span2" name="url" placeholder="Feed-URL">
                       <button type="submit" class="btn btn-large" value="登 録">
@@ -35,7 +35,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div><!-- row demo-row -->
 
     <b>{{ msg }}</b>
     <ul>
@@ -43,7 +43,7 @@
         <li><b>{{ feed.title }}</b> ({{ feed.url }})</li>
     {% endfor %}
     </ul>
-  </div>
+  </div><!-- container -->
   </body>
 </html>
 {% endautoescape %}
