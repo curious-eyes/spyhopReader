@@ -1,0 +1,10 @@
+{% extends "layout/base.html" %}
+{% block title %}Spyhop Reader{% endblock %}
+
+{% block content %}
+    <ul>
+    {% for feed in feeds %}
+        <li><b>{{ feed.title }}</b> ({{ feed.url }})</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

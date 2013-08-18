@@ -1,49 +1,12 @@
-<!DOCTYPE html>
-{% autoescape true %}
-<html>
-  <head>
-    <link rel="stylesheet" href="/FlatUI/bootstrap/css/bootstrap.css">
-    <link rel="stylesheet" href="/FlatUI/css/flat-ui.css">
-  </head>
-  <body>
-    <div class="container">
-      <div class="row demo-row">
-        <div class="span12">
-          <div class="navbar navbar-inverse">
-            <div class="navbar-inner">
-              <div class="container">
-                <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target="#nav-collapse-01"></button>
-                    <a class="brand fui-flat"></a>
-                <div class="nav-collapse collapse" id="nav-collapse-01">
-                  <ul class="nav">
-                    <li>
-                      <a href="{{ urlLogout }}">
-                        Logout
-                      </a>
-                    </li>
-                  </ul>
-                  <form class="navbar-search form-search pull-right" action="{{ urlStoreFeed }}" method="post">
-                    <div class="input-append">
-                      <input type="text" class="search-query span2" name="url" placeholder="Feed-URL">
-                      <button type="submit" class="btn btn-large" value="登 録">
-                        <i class="fui-plus"></i>
-                      </button>
-                    </div>
-                  </form>
-                </div><!--/.nav -->
-              </div>
-            </div>
-          </div>
-        </div>
-      </div><!-- row demo-row -->
+{% extends "layout/base.html" %}
+{% block title %}Spyhop Reader{% endblock %}
 
-    <b>{{ msg }}</b>
-    <ul>
-    {% for feed in feeds %}
-        <li><b>{{ feed.title }}</b> ({{ feed.url }})</li>
+{% block content %}
+    <div class="feed-items">
+        <table>
+    {% for item in items %}
+        <tr><td>{{ item.title }}</td><td> ({{ item.summary }})</td></tr>
     {% endfor %}
-    </ul>
-  </div><!-- container -->
-  </body>
-</html>
-{% endautoescape %}
+        </table>
+    </div>
+{% endblock %}

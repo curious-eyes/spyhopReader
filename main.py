@@ -43,6 +43,7 @@ debug = environ.get('SERVER_SOFTWARE', '').startswith('Dev')
 app = webapp2.WSGIApplication([
     ('/.*', 'modules.{module}.controllers.{controller}.{action}Handler'),
     webapp2.Route('/toppage/default/store', name='store-feed' ),
+    webapp2.Route('/toppage/default/blogs', name='list-blogs' ),
 ], debug=debug)
 app.router.set_dispatcher(router.custom_dispatcher)
 
